@@ -19,6 +19,7 @@ from langchain_core.utils import stringify_dict
 from pydantic import BaseModel, Field
 
 from rai.communication.ros2 import ROS2Message
+from rai.tools.positive_params import require_positive_number
 from rai.tools.ros2.base import BaseROS2Tool, BaseROS2Toolkit
 
 
@@ -109,6 +110,7 @@ class CallROS2ServiceTool(BaseROS2Tool):
     ) -> str:
         if not self.is_writable(service_name):
             raise ValueError(f"Service {service_name} is not writable")
+        timeout_sec = require_positive_number(timeout_sec, name="timeout_sec")
         if service_args is None:
             service_args = {}
         message = ROS2Message(payload=service_args)
